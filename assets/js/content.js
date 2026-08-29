@@ -129,37 +129,38 @@ function loadGallerySection() {
   const trackAtas = document.getElementById('gallery-track-atas');
   const trackBawah = document.getElementById('gallery-track-bawah');
 
+  // Generator Kartu Frame Minimalis
   function createCardHTML(item) {
-    // Validasi jika item atau src tidak ada
     if (!item || !item.src) return '';
 
     return `
-      <div class="gallery-card relative group flex-shrink-0 w-64 h-44 md:w-80 md:h-56 rounded-2xl overflow-hidden border border-white/10 shadow-lg bg-slate-900 mx-2">
-        <img src="${item.src}" 
-             alt="${item.caption || 'Foto Galeri'}" 
-             class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
-             loading="lazy"
-             onerror="this.onerror=null; this.parentElement.style.display='none';" />
-        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
-          <p class="text-white text-xs md:text-sm font-medium tracking-wide text-left">${item.caption || ''}</p>
+      <div class="gallery-card group flex-shrink-0 w-64 md:w-80 bg-white-900/90 p-3 md:p-4 rounded-xl border border-white/20 shadow-[0_10px_30px_rgba(0,0,0,0.5)] transition-all duration-500 hover:scale-105 hover:border-gold/50 hover:shadow-[0_20px_40px_rgba(194,144,67,0.2)] mx-3 md:mx-4 flex flex-col">
+        
+        <!-- Wadah Foto dengan Inner Border Tipis -->
+        <div class="relative w-full h-40 md:h-52 rounded-lg overflow-hidden bg-slate-950 border border-slate-800">
+          <img src="${item.src}" 
+               class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-108" 
+               loading="lazy"
+               onerror="this.onerror=null; this.parentElement.parentElement.style.display='none';" />
+          <!-- Light Reflection Effect saat di-hover -->
+          <div class="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/5 to-white/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
         </div>
       </div>
     `;
   }
 
-  // Render Baris Atas
+  // 1. Render Baris Atas
   if (trackAtas && galeriData.barisAtas) {
-    // Filter hanya item yang valid
     const validItems = galeriData.barisAtas.filter(item => item && item.src);
     const itemsHTML = validItems.map(createCardHTML).join('');
-    trackAtas.innerHTML = itemsHTML + itemsHTML; // Duplikasi untuk infinite loop
+    trackAtas.innerHTML = itemsHTML + itemsHTML;
   }
 
-  // Render Baris Bawah
+  // 2. Render Baris Bawah
   if (trackBawah && galeriData.barisBawah) {
     const validItems = galeriData.barisBawah.filter(item => item && item.src);
     const itemsHTML = validItems.map(createCardHTML).join('');
-    trackBawah.innerHTML = itemsHTML + itemsHTML; // Duplikasi untuk infinite loop
+    trackBawah.innerHTML = itemsHTML + itemsHTML;
   }
 }
 

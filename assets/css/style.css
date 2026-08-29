@@ -168,45 +168,43 @@ body.no-scroll {
                             asli) yang digeser oleh keyframes di bawah.
    ===================================================================== */
 
+/* Container Marquee Galeri */
 .gallery-marquee-row {
-  position: relative;
   width: 100%;
   overflow: hidden;
-  /* Fade lembut di tepi kiri & kanan supaya foto tidak terpotong kasar */
-  -webkit-mask-image: linear-gradient(to right, transparent, black 6%, black 94%, transparent);
-  mask-image: linear-gradient(to right, transparent, black 6%, black 94%, transparent);
+  display: flex;
+  user-select: none;
+  padding: 10px 0;
 }
 
 .gallery-track {
   display: flex;
-  width: max-content; /* lebar mengikuti total foto, bukan dibatasi parent */
+  width: max-content;
   will-change: transform;
 }
 
-/* Baris atas: bergerak dari KANAN ke KIRI.
-   Karena track berisi data yang digandakan 2x, geser sejauh -50%
-   membuat loop terlihat menyambung tanpa putus (lihat gallery.js). */
-@keyframes marqueeLeft {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
-}
+/* Kecepatan Animasi Marquee (35 detik per putaran) */
 .animate-marquee-left {
-  animation: marqueeLeft 45s linear infinite;
+  animation: marqueeLeft 35s linear infinite;
 }
 
-/* Baris bawah: bergerak dari KIRI ke KANAN (arah berlawanan) */
-@keyframes marqueeRight {
-  from { transform: translateX(-50%); }
-  to   { transform: translateX(0); }
-}
 .animate-marquee-right {
-  animation: marqueeRight 45s linear infinite;
+  animation: marqueeRight 35s linear infinite;
 }
 
-/* Jeda animasi saat kursor diarahkan ke salah satu baris, supaya user
-   bisa memilih foto dengan nyaman sebelum mengklik */
+/* Berhenti perlahan saat kursor diarahkan ke frame */
 .gallery-marquee-row:hover .gallery-track {
   animation-play-state: paused;
+}
+
+@keyframes marqueeLeft {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes marqueeRight {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0%); }
 }
 
 /* =====================================================================
