@@ -113,7 +113,7 @@ const CONFIG = {
   api: {
     // Contoh: "https://script.google.com/macros/s/XXXXXXXXXXXX/exec"
     appsScriptUrl:
-      "https://script.google.com/macros/s/AKfycbzAuU0kgFec7BkMVNjkc8owsEcd9uPumHO43ZqlNNJbBbLhYanx7UMvZTvv0OOzHLft/exec",
+      "https://script.google.com/macros/s/AKfycbwb0-l9KwqwlXqEhpEhwaCDv1u_DpdgT1XXrlbZjy_zVV39OPol0jcfZWL_DtjJVIW4/exec",
   },
 };
 
