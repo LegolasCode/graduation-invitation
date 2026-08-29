@@ -76,7 +76,7 @@ const CONFIG = {
       { src: "assets/images/gallery/atas-9.jpg" },
       { src: "assets/images/gallery/atas-10.jpg" },
       { src: "assets/images/gallery/atas-11.jpg" },
-      { src: "assets/images/gallery/atas-12.jpg" }
+      { src: "assets/images/gallery/atas-12.jpg" },
     ],
     barisBawah: [
       { src: "assets/images/gallery/bawah-1.jpg" },
@@ -90,7 +90,7 @@ const CONFIG = {
       { src: "assets/images/gallery/bawah-9.jpg" },
       { src: "assets/images/gallery/bawah-10.jpg" },
       { src: "assets/images/gallery/bawah-11.jpg" },
-      { src: "assets/images/gallery/bawah-12.jpg" }
+      { src: "assets/images/gallery/bawah-12.jpg" },
     ],
   },
 
@@ -112,7 +112,8 @@ const CONFIG = {
   // Lihat README.md bagian "Setup Google Apps Script" untuk caranya.
   api: {
     // Contoh: "https://script.google.com/macros/s/XXXXXXXXXXXX/exec"
-    appsScriptUrl: "https://script.google.com/macros/s/AKfycbxnHxjPZZPXsXvUBADLROOKJ3BSfgOcvTnZcjYQWXJucglC2GGB0T0XsZdDgJpY7rvr/exec",
+    appsScriptUrl:
+      "https://script.google.com/macros/s/AKfycbzAuU0kgFec7BkMVNjkc8owsEcd9uPumHO43ZqlNNJbBbLhYanx7UMvZTvv0OOzHLft/exec",
   },
 };
 
