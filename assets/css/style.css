@@ -1,0 +1,254 @@
+/* =====================================================================
+   STYLE.CSS
+   =====================================================================
+   Berisi:
+   1. Import font
+   2. Animasi amplop (buka flap, kertas naik-turun)
+   3. Efek salju jatuh (snowfall)
+   4. Ilustrasi dekoratif gunung salju & pohon pinus (dibuat dari CSS
+      shape / SVG background, bukan foto, supaya ringan & bisa jadi
+      "satu latar belakang yang menyambung" dari section 2 sampai 7)
+   5. Utility kecil lain (scrollbar, focus style, dsb)
+   ===================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  --color-bg-dark: #0f172a;      /* navy gelap - warna dasar tema winter night */
+  --color-bg-darker: #0b1120;
+  --color-pine: #14532d;         /* hijau tua pohon pinus */
+  --color-pine-dark: #0d3a1f;
+  --color-mountain-1: #1e293b;   /* gunung lapisan belakang (paling terang/jauh) */
+  --color-mountain-2: #16213a;   /* gunung lapisan tengah */
+  --color-mountain-3: #0f172a;   /* gunung lapisan depan (paling gelap/dekat) */
+  --color-snow: #e2e8f0;
+  --color-gold: #c29043;
+  --color-gold-hover: #a17736;
+  --color-text-light: #e2e8f0;
+  --color-envelope: #cbd5e1;
+  --color-envelope-darker: #94a3b8;
+  --color-wax-seal: #d97706;
+}
+
+* {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-bg-dark);
+  color: var(--color-text-light);
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+}
+
+.font-serif-display {
+  font-family: 'Playfair Display', serif;
+}
+
+/* Kunci scroll body ketika amplop belum dibuka (ditambahkan/dihapus lewat JS) */
+body.no-scroll {
+  overflow: hidden;
+  height: 100vh;
+}
+
+/* =====================================================================
+   ANIMASI BARU: ENVELOPE INTERACTIVE 3D
+   ===================================================================== */
+
+/* 1. Animasi Segel Lilin Lepas */
+@keyframes waxSealPop {
+  0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(1.4); opacity: 0; filter: blur(4px); }
+}
+
+/* 2. Flap Atas Berputar 3D Kebalik */
+@keyframes openFlap3D {
+  0% { transform: rotateX(0deg); z-index: 20; }
+  60% { z-index: 20; }
+  100% { transform: rotateX(180deg); z-index: 5; } /* Pindah ke belakang badan utama setelah terbuka */
+}
+
+/* 3. Kertas Meluncur Naik lalu Menimpa Depan Amplop */
+@keyframes paperLiftAndDrop {
+  0% { transform: translateY(0); z-index: 10; opacity: 0; }
+  20% { opacity: 1; }
+  50% { transform: translateY(-75%); z-index: 10; } /* Meluncur naik melewati batas atas */
+  55% { z-index: 35; } /* SWAP KUNCI: Tukar z-index ke paling depan dokumen */
+  100% { transform: translateY(0); z-index: 35; opacity: 1; } /* Turun rapi menimpa amplop */
+}
+
+/* 4. Section Memudar Keluar Secara Lembut */
+@keyframes envelopeSectionFadeOut {
+  0% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(0.98); filter: blur(2px); }
+}
+
+/* 5. Tombol Memudar Halus */
+@keyframes fadeBtnOut {
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: 0; transform: scale(0.9); }
+}
+
+/* Kelas Utilitas Khusus */
+.animate-wax-pop {
+  animation: waxSealPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.animate-open-flap-3d {
+  animation: openFlap3D 0.7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.animate-paper-lift-drop {
+  animation: paperLiftAndDrop 1.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  animation-delay: 0.6s; /* Menunggu flap berputar setengah jalan */
+}
+
+.animate-fade-btn {
+  animation: fadeBtnOut 0.4s ease-in forwards;
+}
+
+.animate-envelope-fadeout {
+  animation: envelopeSectionFadeOut 0.9s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* =====================================================================
+   2. EFEK SALJU JATUH
+   ===================================================================== */
+
+@keyframes snowfall {
+  0%   { transform: translateY(-10vh) translateX(0); opacity: 0; }
+  10%  { opacity: 1; }
+  100% { transform: translateY(110vh) translateX(20px); opacity: 0; }
+}
+
+.snowflake {
+  position: absolute;
+  top: 0;
+  background-color: white;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: snowfall linear infinite;
+}
+
+
+/* =====================================================================
+   4. ILUSTRASI HUTAN PINUS (section 6 - 7)
+   =====================================================================
+   Menyambung langsung dari akhir gunung salju: warna gradasi di bagian
+   atas wrapper pinus dibuat senada dengan warna gunung paling depan
+   (var(--color-mountain-3)) supaya sambungannya halus, baru kemudian
+   turun ke warna hijau tua pohon pinus.
+   ===================================================================== */
+
+.pine-forest-wrap {
+  position: relative;
+  isolation: isolate;
+  background: linear-gradient(
+    to bottom,
+    var(--color-mountain-3) 0%,
+    var(--color-bg-darker) 12%,
+    var(--color-bg-darker) 100%
+  );
+  overflow: hidden;
+}
+
+.pine-forest-wrap .pine-layer {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  pointer-events: none;
+}
+
+/* =====================================================================
+   6. GALERI KENANGAN — SLIDE OTOMATIS (INFINITE MARQUEE 2 ARAH)
+   =====================================================================
+   .gallery-marquee-row  = "jendela" yang memotong (overflow hidden) &
+                            memberi efek fade lembut di tepi kiri/kanan.
+   .gallery-track        = baris flex berisi foto (2x lipat dari data
+                            asli) yang digeser oleh keyframes di bawah.
+   ===================================================================== */
+
+.gallery-marquee-row {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  /* Fade lembut di tepi kiri & kanan supaya foto tidak terpotong kasar */
+  -webkit-mask-image: linear-gradient(to right, transparent, black 6%, black 94%, transparent);
+  mask-image: linear-gradient(to right, transparent, black 6%, black 94%, transparent);
+}
+
+.gallery-track {
+  display: flex;
+  width: max-content; /* lebar mengikuti total foto, bukan dibatasi parent */
+  will-change: transform;
+}
+
+/* Baris atas: bergerak dari KANAN ke KIRI.
+   Karena track berisi data yang digandakan 2x, geser sejauh -50%
+   membuat loop terlihat menyambung tanpa putus (lihat gallery.js). */
+@keyframes marqueeLeft {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.animate-marquee-left {
+  animation: marqueeLeft 45s linear infinite;
+}
+
+/* Baris bawah: bergerak dari KIRI ke KANAN (arah berlawanan) */
+@keyframes marqueeRight {
+  from { transform: translateX(-50%); }
+  to   { transform: translateX(0); }
+}
+.animate-marquee-right {
+  animation: marqueeRight 45s linear infinite;
+}
+
+/* Jeda animasi saat kursor diarahkan ke salah satu baris, supaya user
+   bisa memilih foto dengan nyaman sebelum mengklik */
+.gallery-marquee-row:hover .gallery-track {
+  animation-play-state: paused;
+}
+
+/* =====================================================================
+   5. UTILITAS TAMBAHAN
+   ===================================================================== */
+
+/* Scrollbar tipis bertema gold, biar konsisten sama aksen warna */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--color-bg-darker); }
+::-webkit-scrollbar-thumb { background: var(--color-gold); border-radius: 4px; }
+
+/* Fokus keyboard tetap kelihatan jelas (aksesibilitas) */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+/* Kartu ucapan & doa - garis salju tipis di kiri sebagai aksen */
+.guestbook-card {
+  border-left: 3px solid var(--color-gold);
+}
+
+/* Loading spinner kecil untuk tombol kirim / fetch data */
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Hormati preferensi user yang mematikan animasi di OS-nya */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — Kelola Tamu Undangan</title>
+  <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'bg-dark': '#0f172a',
+            'bg-darker': '#0b1120',
+            'gold': '#c29043',
+            'gold-hover': '#a17736',
+            'text-light': '#e2e8f0',
+          },
+          fontFamily: {
+            'serif-display': ['Playfair Display', 'serif'],
+            'sans': ['Inter', 'sans-serif'],
+          },
+        },
+      },
+    };
+  </script>
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+
+<body class="bg-bg-dark text-text-light font-sans antialiased min-h-screen">
+
+  <div class="max-w-3xl mx-auto px-4 py-10 md:py-16">
+
+    <!-- =============================================================
+         HEADER HALAMAN
+         ============================================================= -->
+    <header class="text-center mb-10">
+      <p class="text-gold font-serif-display italic text-sm tracking-widest mb-1">Panel Admin</p>
+      <h1 class="font-serif-display text-3xl md:text-4xl text-white">Kelola Tamu Undangan</h1>
+      <p class="text-text-light/50 text-sm mt-2">
+        Tambahkan nama tamu untuk membuat link undangan personal, lalu bagikan link tersebut.
+      </p>
+      <a href="index.html" class="inline-block mt-4 text-xs text-gold hover:text-gold-hover underline">
+        &larr; Kembali ke halaman undangan
+      </a>
+    </header>
+
+    <!-- =============================================================
+         GATE: FORM MASUKKAN ADMIN KEY (disembunyikan setelah tersimpan)
+         Admin Key dicocokkan dengan ADMIN_KEY di Code.gs (server side).
+         ============================================================= -->
+    <form id="admin-key-form" class="hidden max-w-sm mx-auto bg-slate-900/40 border border-white/10 rounded-2xl p-6 space-y-4">
+      <div>
+        <label for="admin-key-input" class="text-xs uppercase tracking-wider text-gold">Admin Key</label>
+        <input
+          id="admin-key-input"
+          type="password"
+          required
+          class="w-full bg-slate-950/50 border border-white/20 rounded-lg p-3 mt-1 text-white focus:outline-none focus:border-gold"
+          placeholder="Masukkan admin key..."
+        />
+        <p class="text-[11px] text-text-light/40 mt-1">
+          Kunci ini diset di baris <code>ADMIN_KEY</code> pada file Code.gs. Lihat README.
+        </p>
+      </div>
+      <button type="submit" class="w-full bg-gold hover:bg-gold-hover text-white font-bold py-3 rounded-lg">
+        Masuk
+      </button>
+    </form>
+
+    <!-- =============================================================
+         DASHBOARD ADMIN (tampil setelah admin key valid tersimpan)
+         ============================================================= -->
+    <div id="admin-dashboard" class="hidden space-y-10">
+
+      <div class="flex justify-end">
+        <button id="admin-logout-btn" type="button" class="text-xs text-text-light/40 hover:text-red-400 underline">
+          Ganti Admin Key / Keluar
+        </button>
+      </div>
+
+      <!-- ===========================================================
+           FORM TAMBAH TAMU BARU
+           =========================================================== -->
+      <section class="bg-slate-900/40 border border-white/10 rounded-2xl p-6">
+        <h2 class="font-serif-display text-xl text-white mb-4">Tambah Tamu Baru</h2>
+        <form id="add-guest-form" class="flex flex-col sm:flex-row gap-3">
+          <input
+            id="guest-nama-input"
+            type="text"
+            required
+            maxlength="100"
+            class="flex-1 bg-slate-950/50 border border-white/20 rounded-lg p-3 text-white focus:outline-none focus:border-gold"
+            placeholder="Nama tamu, contoh: Bapak Budi Santoso"
+          />
+          <button
+            id="add-guest-submit-btn"
+            type="submit"
+            class="bg-gold hover:bg-gold-hover text-white font-bold py-3 px-6 rounded-lg shadow-lg transition-colors flex items-center justify-center gap-2 whitespace-nowrap"
+          >
+            Generate Link
+          </button>
+        </form>
+
+        <p id="add-guest-error" class="hidden text-red-400 text-xs mt-3"></p>
+
+        <!-- Hasil link yang baru digenerate muncul di sini -->
+        <div id="add-guest-result" class="hidden mt-4"></div>
+      </section>
+
+      <!-- ===========================================================
+           TABEL DAFTAR SELURUH TAMU
+           =========================================================== -->
+      <section class="bg-slate-900/40 border border-white/10 rounded-2xl p-6">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="font-serif-display text-xl text-white">Daftar Tamu</h2>
+          <button id="refresh-guest-list-btn" type="button" class="text-xs text-gold hover:text-gold-hover underline">
+            Muat Ulang
+          </button>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left">
+            <thead>
+              <tr class="border-b border-white/10 text-[11px] uppercase tracking-wider text-text-light/40">
+                <th class="py-2 px-3">Nama</th>
+                <th class="py-2 px-3">Status</th>
+                <th class="py-2 px-3">Link</th>
+                <th class="py-2 px-3">Dibuat</th>
+              </tr>
+            </thead>
+            <tbody id="guest-table-body"></tbody>
+          </table>
+          <p id="guest-table-empty" class="hidden text-center text-text-light/50 text-sm py-8">
+            Belum ada tamu. Tambahkan lewat form di atas.
+          </p>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="assets/js/config.js"></script>
+  <script src="assets/js/sheets-api.js"></script>
+  <script src="assets/js/admin.js"></script>
+</body>
+</html>
